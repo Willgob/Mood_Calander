@@ -1,6 +1,7 @@
 import adapter from '@sveltejs/adapter-auto';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
+import path from 'path';
 
 export default defineConfig({
 	plugins: [
@@ -16,5 +17,11 @@ export default defineConfig({
 			// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 			adapter: adapter()
 		})
-	]
+	],
+	resolve: {
+		alias: {
+			$lib: path.resolve('./src/lib'),
+			$convex: path.resolve('./src/convex')
+		}
+	}
 });
