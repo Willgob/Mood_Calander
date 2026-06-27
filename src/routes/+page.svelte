@@ -4,16 +4,23 @@
 	import { useQuery } from '@mmailaender/convex-svelte';
 	import { useAuth } from '@mmailaender/convex-better-auth-svelte/svelte';
 
+    import { goto } from '$app/navigation'
+
 	let { data } = $props();
 
 	// Auth state store
 	const auth = useAuth();
-	const isLoading = $derived(auth.isLoading);
+	
+    const isLoading = $derived(auth.isLoading);
 	const isAuthenticated = $derived(auth.isAuthenticated);
 
 	const currentUserResponse = useQuery(api.auth.getCurrentUser, () => (isAuthenticated ? {} : 'skip'));
 	let user = $derived(currentUserResponse.data);
 
+    $effect(() => {
+        console.log("user", user);
+    });
+    
 	// Sign in/up form state
 	let showSignIn = $state(true);
 	let name = $state('');
@@ -71,6 +78,10 @@
 	let accessToken = $state<string | null>(null);
 	let tokenLoading = $state(false);
 
+    // Demo: Fetch user ID
+	let userId = $state<string | null>(null);
+	let userIdLoading = $state(false);
+
 	async function fetchToken() {
 		tokenLoading = true;
 		try {
@@ -83,6 +94,23 @@
 			tokenLoading = false;
 		}
 	}
+
+    async function fetchUserID() {
+		userIdLoading = true;
+		try {
+			const id = await user!._id;
+			userId = id;
+		} catch (error) {
+			console.error('Error fetching user ID:', error);
+			userId = 'Error fetching ID';
+		} finally {
+			userIdLoading = false;
+		}
+	}
+
+    function redirectToHome() {
+        goto('/home');
+    }
 </script>
 
 <div class="flex h-screen flex-col items-center justify-center bg-gray-50">
@@ -137,7 +165,6 @@
 				</button>
 			</p>
 		</div>
-	{:else if isAuthenticated}
 		<!-- Dashboard Component -->
 		<div class="w-full max-w-md rounded-lg bg-white p-6 text-center shadow-md">
 			<div class="mb-4 text-xl font-semibold text-gray-800">
@@ -154,11 +181,24 @@
 				>
 					{tokenLoading ? 'Fetching...' : 'Fetch Access Token'}
 				</button>
+
+                <button
+					onclick={fetchUserID}
+					disabled={userIdLoading}
+					class="cursor-pointer rounded-md bg-blue-600 px-3 py-1 text-sm text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+				>
+					{userIdLoading ? 'Fetching...' : 'Fetch user ID'}
+				</button>
 				{#if accessToken}
 					<div class="mt-2 rounded border bg-white p-2 text-xs break-all text-gray-600">
 						{accessToken.length > 50 ? accessToken.substring(0, 50) + '...' : accessToken}
 					</div>
 				{/if}
+                {#if userId}
+                    <div class="mt-2 rounded border bg-white p-2 text-xs break-all text-gray-600">
+                        User ID: {userId}
+                    </div>
+                {/if}
 			</div>
 
 			<button
