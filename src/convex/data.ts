@@ -1,5 +1,6 @@
 import { mutation } from "./_generated/server";
-
+import { v } from "convex/values";
+import { query } from "./_generated/server";
 
 export const createBasicData = mutation({
 //   args: { text: v.string()},
@@ -7,8 +8,35 @@ export const createBasicData = mutation({
     await ctx.db.insert("data", { 
       userId:"test",
       settings:{},
-      name:"William"
+      name:"William",
+      data:{}
     },
     );
+  },
+});
+
+export const addEntry = mutation({
+  args: { id: v.id("data")},
+  handler: async(ctx, args) => {
+    const { id } = args;
+    console.log(await ctx.db.get( "data" , id));
+
+    await ctx.db.patch("data", id, {
+      data: {
+        test: "false"
+      }
+    })
+  }
+})
+
+export const getDataId = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    const doc = await ctx.db
+      .query("data")
+      .withIndex("userId", (q) => q.eq("userId", args.userId))
+      .unique();
+
+    return doc?._id;
   },
 });
