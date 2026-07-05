@@ -3,8 +3,6 @@
     import { useMutation, useQuery } from 'convex-svelte';
     import { api } from '../../convex/_generated/api';
     import { useAuth } from '@mmailaender/convex-better-auth-svelte/svelte';
-    import Chart from 'chart.js/auto';
-    import { onMount } from 'svelte';
 
     const auth = useAuth();
 
@@ -30,6 +28,7 @@
         addEntryMutation({ id: dataId });
     }
 
+
     // ------------------------------ Date ---------------------------------
     
     let date = new Date();
@@ -45,27 +44,15 @@
 
     // ------------------------------ Chart ---------------------------------
 
-    onMount(() => {
-        const data = {
-            labels: Array.from({ length: getDaysInMonth(month, year) }, (_, i) => (i + 1).toString()),
-            datasets: [{
-                label: 'January',
-                data: [65, 59, 80, 81, 56, 55, 41]
-            }],
-        }
-        const options = {}
-        const ctx = document.getElementById('chart') as HTMLCanvasElement;
-        new Chart(ctx, {
-            type: 'line',
-            data: data,
-            options: options
-        })
-    })
+    import { LineChart, defaultChartPadding } from 'layerchart';
+    const dataQuery = useQuery(api.data.getData, () => (dataId ? { id: dataId } : 'skip'));
+    const data = $derived(dataQuery.data);
+    console.log ("data - ", dataQuery.data);
 
 </script>
 
 <button onclick={addEntry}>Add Journal Entry</button>
 
 <div>
-  <canvas id="chart"></canvas>
+    <LineChart data={data?.data ?? undefined} x="date" y="value" padding={defaultChartPadding({ right: 10 })} height={300} />
 </div>

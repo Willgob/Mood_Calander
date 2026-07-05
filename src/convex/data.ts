@@ -19,15 +19,16 @@ export const addEntry = mutation({
   args: { id: v.id("data")},
   handler: async(ctx, args) => {
     const { id } = args;
-    console.log(await ctx.db.get( "data" , id));
 
     await ctx.db.patch("data", id, {
       data: {
         test: "false"
       }
     })
+
+    console.log(await ctx.db.get( "data" , id));
   }
-})
+});
 
 export const getDataId = query({
   args: { userId: v.string() },
@@ -39,4 +40,14 @@ export const getDataId = query({
 
     return doc?._id;
   },
+});
+
+export const getData = query({
+  args: { id: v.id("data") },
+  handler: async (ctx, args) => {
+    const { id } = args;
+    const data = await ctx.db.get(id);
+    console.log("data????",data); 
+    return data;
+  }
 });
