@@ -54,5 +54,5 @@
 <button onclick={addEntry}>Add Journal Entry</button>
 
 <div>
-    <LineChart data={data?.data ?? undefined} x="date" y="value" padding={defaultChartPadding({ right: 10 })} height={300} />
+    <LineChart data={data?.data ?? undefined} x="date" y="value" padding={defaultChartPadding({ right: 10 })} height={300}  />
 </div>
