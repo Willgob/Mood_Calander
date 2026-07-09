@@ -44,7 +44,10 @@
 
     // ------------------------------ Chart ---------------------------------
 
-    import { LineChart, defaultChartPadding } from 'layerchart';
+    import { LineChart, defaultChartPadding,Tooltip } from 'layerchart';
+    import  Hover  from '../../lib/hover.svelte';
+    let hoveredData = $state<any>(null);
+
     const dataQuery = useQuery(api.data.getData, () => (dataId ? { id: dataId } : 'skip'));
     const data = $derived(dataQuery.data);
     console.log ("data - ", dataQuery.data);
@@ -53,6 +56,30 @@
 
 <button onclick={addEntry}>Add Journal Entry</button>
 
-<div>
-    <LineChart data={data?.data ?? undefined} x="date" y="value" padding={defaultChartPadding({ right: 10 })} height={300}  />
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<div onclick={() => {
+    if (!hoveredData) return;
+    console.log("Hovered Data:", hoveredData);
+}}>
+    <LineChart 
+        data={data?.data ?? undefined} 
+        x="date" 
+        y="value" 
+        padding={defaultChartPadding({ right: 10 })}
+        height={300}
+    >
+        {#snippet tooltip()}
+            <Tooltip.Root>
+                {#snippet children({data })}
+                    <Hover {data} bind:value={hoveredData} />
+                    <Tooltip.Header value={data.date} />
+                    <Tooltip.List>
+                        <Tooltip.Item label="Value" value={data.value} />
+                    </Tooltip.List>
+                {/snippet}
+            </Tooltip.Root>
+        {/snippet}
+w
+    </LineChart>
 </div>
