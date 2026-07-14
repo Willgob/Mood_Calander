@@ -14,7 +14,7 @@
 				Github
 			</a>
 			<a 
-				href="https://github.com/Willgob/Mood_Calander" 
+				href="mailto:william@willgob.com" 
 				class="hover:underline underline-offset-4" 
 				target="_blank" 
 				rel="noopener noreferrer"
