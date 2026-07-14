@@ -19,7 +19,7 @@
     mobile: { label: "Mobile", color: "var(--chart-2)" },
   } satisfies Chart.ChartConfig;
 </script>
-
+ 
 <Card.Root>
   <Card.Header>
     <Card.Title>Line Chart - Multiple</Card.Title>

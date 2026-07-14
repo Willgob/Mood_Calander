@@ -5,6 +5,7 @@
 	import { setupConvex } from 'convex-svelte';
 	import { createSvelteAuthClient } from '@mmailaender/convex-better-auth-svelte/svelte';
 	import { authClient } from '$lib/auth-client';
+	import { ModeWatcher } from "mode-watcher"
 
 	createSvelteAuthClient({ authClient: authClient as any });
 
@@ -13,6 +14,7 @@
 	setupConvex(PUBLIC_CONVEX_URL);
 </script>
 
+<ModeWatcher />
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 <div class="min-h-sccreen background-background text-foreground antialiased">
 	{@render children()}
