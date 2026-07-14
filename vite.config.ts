@@ -24,5 +24,8 @@ export default defineConfig({
 			$lib: path.resolve('./src/lib'),
 			$convex: path.resolve('./src/convex')
 		}
+	},
+	ssr: {
+		noExternal: ['bits-ui']
 	}
 });

@@ -6,6 +6,8 @@
 	import { createSvelteAuthClient } from '@mmailaender/convex-better-auth-svelte/svelte';
 	import { authClient } from '$lib/auth-client';
 	import { ModeWatcher } from "mode-watcher"
+	import * as Sidebar from "$lib/components/ui/sidebar/index.js";
+  	import AppSidebar from "$lib/components/app-sidebar.svelte";
 
 	import Footer from '$lib/components/footer.svelte';
 
@@ -20,6 +22,14 @@
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
 <div class="min-h-screen background-background text-foreground antialiased flex flex-col">
+<!-- <Sidebar.Provider>
+	<AppSidebar />
+	<main class="grow">
+	<Sidebar.Trigger />
+		{@render children()}
+	</main>
+	<Footer />
+</Sidebar.Provider> -->
 	<main class="grow">
 		{@render children()}
 	</main>
