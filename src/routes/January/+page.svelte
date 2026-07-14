@@ -68,6 +68,8 @@
 </script>
 
 <button onclick={addEntry}>Add Journal Entry</button>
+ <!-- also later me problem to figure out -->
+
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div onclick={() => {
