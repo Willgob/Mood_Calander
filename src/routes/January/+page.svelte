@@ -3,6 +3,7 @@
     import { useMutation, useQuery } from 'convex-svelte';
     import { api } from '../../convex/_generated/api';
     import { useAuth } from '@mmailaender/convex-better-auth-svelte/svelte';
+    import { goto } from '$app/navigation';
 
     const auth = useAuth();
 
@@ -61,6 +62,7 @@
 <div onclick={() => {
     if (!hoveredData) return;
     console.log("Hovered Data:", hoveredData);
+    goto(`/January/${hoveredData.date}`);
 }}>
     <LineChart 
         data={data?.data ?? undefined} 
@@ -80,6 +82,5 @@
                 {/snippet}
             </Tooltip.Root>
         {/snippet}
-w
     </LineChart>
 </div>
