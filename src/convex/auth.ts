@@ -29,7 +29,6 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
           userId:userId,
           settings:{},
           name: name,
-          data:{}
         });
       },
       onUpdate: async (ctx, doc) => {

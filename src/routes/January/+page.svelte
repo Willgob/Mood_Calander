@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { page } from '$app/state';
+
   import { LineChart } from "layerchart";
   import { scaleUtc } from "d3-scale";
   import { curveNatural } from "d3-shape";
@@ -71,11 +73,11 @@
 <div onclick={() => {
     // if (!hoveredData) return;
     console.log("Hovered Data:", hoveredData);
-    goto(`/January/${hoveredData.date}`);
+    // later me problem, open dialog
 }}>
     <Card.Root>
     <Card.Header>
-        <Card.Title>January</Card.Title>
+        <Card.Title>{page.params.month} {page.params.year}</Card.Title>
     </Card.Header>
     <Card.Content>
         <Chart.Container config={chartConfig}>
