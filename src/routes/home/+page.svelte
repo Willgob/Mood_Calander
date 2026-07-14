@@ -1,129 +1,73 @@
 <script lang="ts">
-	import { LineChart, defaultChartPadding } from 'layerchart';
-	// import { createDateSeries } from '../../lib/utils/data.js';
+  import { LineChart } from "layerchart";
+  import { scaleUtc } from "d3-scale";
+  import { curveNatural } from "d3-shape";
+  import * as Chart from "$lib/components/ui/chart/index.js";
+  import * as Card from "$lib/components/ui/card/index.js";
 
-	const data = [
-  {
-    "date": new Date('2026-06-05T14:00:00.000Z'),
-    "value": 78
-  },
-  {
-    "date": new Date('2026-06-06T14:00:00.000Z'),
-    "value": 88
-  },
-  {
-    "date": new Date('2026-06-07T14:00:00.000Z'),
-    "value": 61
-  },
-  {
-    "date": new Date('2026-06-08T14:00:00.000Z'),
-    "value": 76
-  },
-  {
-    "date": new Date('2026-06-09T14:00:00.000Z'),
-    "value": 77
-  },
-  {
-    "date": new Date('2026-06-10T14:00:00.000Z'),
-    "value": 77
-  },
-  {
-    "date": new Date('2026-06-11T14:00:00.000Z'),
-    "value": 50
-  },
-  {
-    "date": new Date('2026-06-12T14:00:00.000Z'),
-    "value": 100
-  },
-  {
-    "date": new Date('2026-06-13T14:00:00.000Z'),
-    "value": 77
-  },
-  {
-    "date": new Date('2026-06-14T14:00:00.000Z'),
-    "value": 68
-  },
-  {
-    "date": new Date('2026-06-15T14:00:00.000Z'),
-    "value": 56
-  },
-  {
-    "date": new Date('2026-06-16T14:00:00.000Z'),
-    "value": 60
-  },
-  {
-    "date": new Date('2026-06-17T14:00:00.000Z'),
-    "value": 55
-  },
-  {
-    "date": new Date('2026-06-18T14:00:00.000Z'),
-    "value": 80
-  },
-  {
-    "date": new Date('2026-06-19T14:00:00.000Z'),
-    "value": 51
-  },
-  {
-    "date": new Date('2026-06-20T14:00:00.000Z'),
-    "value": 97
-  },
-  {
-    "date": new Date('2026-06-21T14:00:00.000Z'),
-    "value": 97
-  },
-  {
-    "date": new Date('2026-06-22T14:00:00.000Z'),
-    "value": 70
-  },
-  {
-    "date": new Date('2026-06-23T14:00:00.000Z'),
-    "value": 53
-  },
-  {
-    "date": new Date('2026-06-24T14:00:00.000Z'),
-    "value": 67
-  },
-  {
-    "date": new Date('2026-06-25T14:00:00.000Z'),
-    "value": 76
-  },
-  {
-    "date": new Date('2026-06-26T14:00:00.000Z'),
-    "value": 53
-  },
-  {
-    "date": new Date('2026-06-27T14:00:00.000Z'),
-    "value": 53
-  },
-  {
-    "date": new Date('2026-06-28T14:00:00.000Z'),
-    "value": 73
-  },
-  {
-    "date": new Date('2026-06-29T14:00:00.000Z'),
-    "value": 53
-  },
-  {
-    "date": new Date('2026-06-30T14:00:00.000Z'),
-    "value": 90
-  },
-  {
-    "date": new Date('2026-07-01T14:00:00.000Z'),
-    "value": 96
-  },
-  {
-    "date": new Date('2026-07-02T14:00:00.000Z'),
-    "value": 61
-  },
-  {
-    "date": new Date('2026-07-03T14:00:00.000Z'),
-    "value": 87
-  },
-  {
-    "date": new Date('2026-07-04T14:00:00.000Z'),
-    "value": 87
-  }
-]
+  const chartData = [
+    { date: new Date("2024-01-01"), desktop: 186, mobile: 80 },
+    { date: new Date("2024-02-01"), desktop: 305, mobile: 200 },
+    { date: new Date("2024-03-01"), desktop: 237, mobile: 120 },
+    { date: new Date("2024-04-01"), desktop: 73, mobile: 190 },
+    { date: new Date("2024-05-01"), desktop: 209, mobile: 130 },
+    { date: new Date("2024-06-01"), desktop: 214, mobile: 140 },
+  ];
+
+  const chartConfig = {
+    desktop: { label: "Desktop", color: "var(--chart-1)" },
+    mobile: { label: "Mobile", color: "var(--chart-2)" },
+  } satisfies Chart.ChartConfig;
 </script>
 
-<LineChart {data} x="date" y="value" padding={defaultChartPadding({ right: 10 })} height={1980} />
+<Card.Root>
+  <Card.Header>
+    <Card.Title>Line Chart - Multiple</Card.Title>
+    <Card.Description>Showing total visitors for the last 6 months</Card.Description>
+  </Card.Header>
+  <Card.Content>
+    <Chart.Container config={chartConfig}>
+      <LineChart
+        data={chartData}
+        x="date"
+        xScale={scaleUtc()}
+        axis="x"
+        series={[
+          {
+            key: "desktop",
+            label: "Desktop",
+            color: chartConfig.desktop.color,
+          },
+          {
+            key: "mobile",
+            label: "Mobile",
+            color: chartConfig.mobile.color,
+          },
+        ]}
+        props={{
+          spline: { curve: curveNatural, motion: "tween", strokeWidth: 2 },
+          xAxis: {
+            format: (v: Date) => v.toLocaleDateString("en-US", { month: "short" }),
+          },
+          highlight: { points: { r: 4 } },
+        }}
+      >
+        {#snippet tooltip()}
+          <Chart.Tooltip hideLabel />
+        {/snippet}
+      </LineChart>
+    </Chart.Container>
+  </Card.Content>
+  <Card.Footer>
+    <div class="flex w-full items-start gap-2 text-sm">
+      <div class="grid gap-2">
+        <div class="flex items-center gap-2 leading-none font-medium">
+          Trending up by 5.2% this month 
+        </div>
+        <div class="text-muted-foreground flex items-center gap-2 leading-none">
+          January - June 2024
+        </div>
+      </div>
+    </div>
+  </Card.Footer>
+</Card.Root>
