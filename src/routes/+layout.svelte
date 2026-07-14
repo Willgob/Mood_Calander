@@ -30,7 +30,7 @@
 	</main>
 	<Footer />
 </Sidebar.Provider> -->
-	<main class="grow flex flex-col">
+	<main class="grow">
 		{@render children()}
 	</main>
 	<Footer />
