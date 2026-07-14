@@ -7,6 +7,8 @@
 	import { authClient } from '$lib/auth-client';
 	import { ModeWatcher } from "mode-watcher"
 
+	import Footer from '$lib/components/footer.svelte';
+
 	createSvelteAuthClient({ authClient: authClient as any });
 
 	let { children } = $props();
@@ -16,6 +18,10 @@
 
 <ModeWatcher />
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
-<div class="min-h-sccreen background-background text-foreground antialiased">
-	{@render children()}
+
+<div class="min-h-screen background-background text-foreground antialiased flex flex-col">
+	<main class="grow">
+		{@render children()}
+	</main>
+	<Footer />
 </div>
