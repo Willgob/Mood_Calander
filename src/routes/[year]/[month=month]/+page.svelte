@@ -73,9 +73,16 @@
     import  Hover  from '../../../lib/hover.svelte';
     let hoveredData = $state<any>(null);
 
-    const dataQuery = useQuery(api.data.getData, () => (dataId ? { id: dataId } : 'skip'));
-    const data = $derived(dataQuery.data);
-    console.log ("data - ", dataQuery.data);
+    const monthEntriesQuery = useQuery(api.entries.getMonthEntries, () =>
+        user?._id && month !== undefined
+            ? { userId: user._id, year: Number(year), month}
+            : 'skip'
+    );  
+    const monthData = $derived(monthEntriesQuery.data);
+    
+    $effect(() => {
+        console.log ("data - ", monthData);
+    });
 </script>
 
 <button onclick={addEntry}>Add Journal Entry</button>
@@ -95,7 +102,7 @@
     <Card.Content>
         <Chart.Container config={chartConfig}>
         <LineChart
-            data={[]} //more later me problem
+            data={(monthData ?? []).map((d) => ({ ...d, date: new Date(d.date) }))} //more later me problem
             x="date"
             xScale={scaleUtc()}
             axis="x"
@@ -120,7 +127,7 @@
             }}
         >
             {#snippet tooltip()}
-            <Chart.Tooltip 
+            <Chart.Tooltip
                 labelFormatter={(value: Date) =>
                     value.toLocaleDateString("en-US", {
                     weekday: "long",
@@ -128,7 +135,14 @@
                     day: "numeric",
                     year: "numeric",
                 })}
-            />
+            >
+            {#snippet formatter({ name, value})}
+            <span class="text-muted-foreground">{chartConfig[name as keyof typeof chartConfig]?.label ?? name}</span>
+                <span class="font-mono font-medium ml-auto">
+                    {value === null ? "No entry" : value}
+                </span>
+            {/snippet}
+            </Chart.Tooltip>
             <Hover onHover={(d) => (hoveredData = d)} />
             {/snippet}
         </LineChart>
