@@ -87,17 +87,22 @@
     });
 
     let dialog = $state(false);
+
+    function openDialogIfHoveredDataExists() {
+        if (hoveredData == null) return;
+        dialog = true;
+    }
 </script>
 
-<Button onclick={() => (dialog = true)}>Add Entry</Button>
+<Button onclick={openDialogIfHoveredDataExists}>Add Entry</Button>
  <!-- also later me problem to figure out -->
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div onclick={() => {
-    if (!hoveredData) return;
+    if (hoveredData == null) return;
     console.log("Hovered Data:", hoveredData);
-    dialog = true;
+    openDialogIfHoveredDataExists();
     // later me problem, open dialog
 }}>
     <Card.Root>
@@ -162,10 +167,10 @@
     </Card.Root>
 </div>
 
-<Dialog.Root open={dialog} onOpenChange={(open) => (dialog = open)}>
+<Dialog.Root open={dialog} onOpenChange={(open) => (dialog = open && hoveredData != null)}>
 <Dialog.Content>
 <Dialog.Header>
-<Dialog.Title>Are you sure absolutely sure?</Dialog.Title>
+<Dialog.Title>{hoveredData?.date ? new Date(hoveredData.date).toLocaleDateString() : 'Add Entry'}</Dialog.Title>
 <Dialog.Description>
     This action cannot be undone. This will permanently delete your account
     and remove your data from our servers.
