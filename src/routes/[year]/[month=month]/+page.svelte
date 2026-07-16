@@ -71,6 +71,8 @@
 
     import { defaultChartPadding,Tooltip } from 'layerchart';
     import  Hover  from '../../../lib/hover.svelte';
+    import * as Dialog from "$lib/components/ui/dialog/index.js";
+    import { Button } from "$lib/components/ui/button/index.js"
     let hoveredData = $state<any>(null);
 
     const monthEntriesQuery = useQuery(api.entries.getMonthEntries, () =>
@@ -83,9 +85,11 @@
     $effect(() => {
         console.log ("data - ", monthData);
     });
+
+    let dialog = $state(false);
 </script>
 
-<button onclick={addEntry}>Add Journal Entry</button>
+<Button onclick={() => (dialog = true)}>Add Entry</Button>
  <!-- also later me problem to figure out -->
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -93,6 +97,7 @@
 <div onclick={() => {
     if (!hoveredData) return;
     console.log("Hovered Data:", hoveredData);
+    dialog = true;
     // later me problem, open dialog
 }}>
     <Card.Root>
@@ -121,7 +126,7 @@
             props={{
             spline: { curve: curveNatural, motion: "tween", strokeWidth: 2 },
             xAxis: {
-                format: (v: Date) => v.toLocaleDateString("en-US", { month: "short" }),
+                format: (v: Date) => v.toLocaleDateString("en-US", { day: "2-digit" }),
             },
             highlight: { points: { r: 4 } },
             }}
@@ -157,3 +162,14 @@
     </Card.Root>
 </div>
 
+<Dialog.Root open={dialog} onOpenChange={(open) => (dialog = open)}>
+<Dialog.Content>
+<Dialog.Header>
+<Dialog.Title>Are you sure absolutely sure?</Dialog.Title>
+<Dialog.Description>
+    This action cannot be undone. This will permanently delete your account
+    and remove your data from our servers.
+</Dialog.Description>
+</Dialog.Header>
+</Dialog.Content>
+</Dialog.Root>
