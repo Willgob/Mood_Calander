@@ -91,7 +91,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div onclick={() => {
-    // if (!hoveredData) return;
+    if (!hoveredData) return;
     console.log("Hovered Data:", hoveredData);
     // later me problem, open dialog
 }}>
@@ -102,7 +102,7 @@
     <Card.Content>
         <Chart.Container config={chartConfig}>
         <LineChart
-            data={(monthData ?? []).map((d) => ({ ...d, date: new Date(d.date) }))} //more later me problem
+            data={(monthData ?? []).map((d) => ({ ...d, date: new Date(d.date) }))}
             x="date"
             xScale={scaleUtc()}
             axis="x"
